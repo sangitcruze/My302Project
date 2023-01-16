@@ -5,9 +5,12 @@
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
+#include "Components/SplineComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Kismet/KismetMathLibrary.h"
+#include "Particles/ParticleSystemComponent.h"
 
 // AmyPlayerCharacter
 
@@ -18,6 +21,8 @@ AmyPlayer::AmyPlayer()
 
 	// set our turn rate for input
 	TurnRateGamepad = 50.f;
+	BaseTurnRate = 45.f;
+	BaseLookUpRate = 45.f;
 
 	// Don't rotate when the controller rotates. Let that just affect the camera.
 	bUseControllerRotationPitch = false;
@@ -78,7 +83,49 @@ void AmyPlayer::MoveRight(float Value)
 		// add movement in that direction
 		AddMovementInput(Direction, Value);
 	}
+
+	
 }
+
+
+void AmyPlayer::StopDash(float Value)
+{
+	GetCharacterMovement()->MaxWalkSpeed = 600.0f;
+	GetCharacterMovement()->MaxAcceleration = 2400.0f;
+	
+}
+
+
+
+void AmyPlayer::Dash(float Value)
+{
+	GetCharacterMovement()->MaxWalkSpeed = 5000.0f;
+	GetCharacterMovement()->MaxAcceleration = 5000.0f;
+	GetCharacterMovement()->BrakingFriction = 2000.0f;
+	
+	//UWorld* world =GetWorld();
+	//FTimerHandle StopDashHandle;
+	//FTimerDelegate  TimerDelegate;
+	//world->GetTimerManager().SetTimer(StopDashHandle,TimerDelegate,StopDash);
+	//FInputActionBinding Dash;
+	
+    
+	
+}
+
+void UpdateDash()
+{
+    
+  
+
+
+	
+}
+
+
+
+
+
 
 //////////////////////////////////////////////////////////////////////////
 // Input
@@ -89,9 +136,16 @@ void AmyPlayer::SetupPlayerInputComponent(class UInputComponent* PlayerInputComp
 	check(PlayerInputComponent);
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
+	//PlayerInputComponent->BindAction("Dash", IE_Released, this, &ACharacter::Dash);
+	
 
+	
 	PlayerInputComponent->BindAxis("Move Forward / Backward", this, &AmyPlayer::MoveForward);
 	PlayerInputComponent->BindAxis("Move Right / Left", this, &AmyPlayer::MoveRight);
+
+
+
+	
 
 	// We have 2 versions of the rotation bindings to handle different kinds of devices differently
 	// "turn" handles devices that provide an absolute delta, such as a mouse.
@@ -116,6 +170,11 @@ void AmyPlayer::TouchStopped(ETouchIndex::Type FingerIndex, FVector Location)
 	StopJumping();
 }
 
+//void AmyPlayer::TouchStarted(ETouchIndex::Type FingerIndex, FVector Location)
+//{
+	//Dash();
+//}
+
 void AmyPlayer::TurnAtRate(float Rate)
 {
 	// calculate delta for this frame from the rate information
@@ -127,6 +186,8 @@ void AmyPlayer::LookUpAtRate(float Rate)
 	// calculate delta for this frame from the rate information
 	AddControllerPitchInput(Rate * TurnRateGamepad * GetWorld()->GetDeltaSeconds());
 }
+
+
 
 
 

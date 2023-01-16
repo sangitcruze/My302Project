@@ -32,6 +32,16 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Input)
 	float TurnRateGamepad;
 
+#pragma region Base functions
+	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
+	float BaseTurnRate;
+
+	/** Base look up/down rate, in deg/sec. Other scaling may affect final rate. */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
+	float BaseLookUpRate;
+#pragma endregion
+
 
 protected:
 	/** Called for forwards/backward input */
@@ -39,6 +49,8 @@ protected:
 
 	/** Called for side to side input */
 	void MoveRight(float Value);
+	void StopDash(float Value);
+	void Dash(float Value);
 
 	/** 
 	 * Called via input to turn at a given rate. 
@@ -69,5 +81,5 @@ protected:
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
-
+	
 };
