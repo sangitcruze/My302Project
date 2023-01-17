@@ -11,7 +11,7 @@ AMyEnemy2::AMyEnemy2()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	Health = 1000;
+	
 	
 	skeletalMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SkeletalMesh"));
 	skeletalMesh->SetupAttachment(RootComponent);
@@ -36,21 +36,22 @@ void AMyEnemy2::Tick(float DeltaTime)
 
 }
 
-void AMyEnemy2::EnemyTakeDamage(float damage)
-{
-	Health -= damage;
+//void AMyEnemy2::EnemyTakeDamage(float damage)
+//{
+   // float Health =1000;
+	//Health -= damage;
 
-	if( currentHealth <= 0)
-	{
-		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(),P_Fire, GetActorLocation(), true);
-		DestroyEnemyActor();
-	}
-}
+	//if( Health <= 0)
+	//{
+		//UGameplayStatics::SpawnEmitterAtLocation(GetWorld(),P_Fire, GetActorLocation(), true);
+		//DestroyEnemyActor();
+	//}
+//}
 
-void AMyEnemy2::DestroyEnemyActor()
-{
-	this->Destroy();
-}
+//void AMyEnemy2::DestroyEnemyActor()
+//{
+	//this->Destroy();
+//}
 
 
 

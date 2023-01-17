@@ -56,6 +56,14 @@ AmyPlayer::AmyPlayer()
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
 }
 
+void AmyPlayer::Tick(float DeltaTime)
+{
+	// this is required or it crashes
+	Super::Tick(DeltaTime);
+	// whatever functions after here should pass in delta time if needed
+	UpdateDash(DeltaTime);
+}
+
 void AmyPlayer::MoveForward(float Value)
 {
 	if ((Controller != nullptr) && (Value != 0.0f))
@@ -88,38 +96,60 @@ void AmyPlayer::MoveRight(float Value)
 }
 
 
-void AmyPlayer::StopDash(float Value)
+
+
+
+
+void AmyPlayer::Dash()
 {
+	Toggle_Dash = true;
+	Dash_Pressed = true;
+	
+		GetCharacterMovement()->MaxWalkSpeed = 5000.0f;
+		GetCharacterMovement()->MaxAcceleration = 5000.0f;
+		GetCharacterMovement()->BrakingFriction = 2000.0f;
+	
+	
+	
+}
+
+
+
+
+void AmyPlayer::StopDash()
+{
+	Toggle_Dash = false;
+	Dash_Pressed = false;
 	GetCharacterMovement()->MaxWalkSpeed = 600.0f;
 	GetCharacterMovement()->MaxAcceleration = 2400.0f;
+	GetCharacterMovement()->Velocity.X = 2400.f;
+	GetCharacterMovement()->Velocity.Y = 2400.f;
 	
 }
 
-
-
-void AmyPlayer::Dash(float Value)
+void AmyPlayer::UpdateDash(float deltaTime)
 {
-	GetCharacterMovement()->MaxWalkSpeed = 5000.0f;
-	GetCharacterMovement()->MaxAcceleration = 5000.0f;
-	GetCharacterMovement()->BrakingFriction = 2000.0f;
 	
-	//UWorld* world =GetWorld();
-	//FTimerHandle StopDashHandle;
-	//FTimerDelegate  TimerDelegate;
-	//world->GetTimerManager().SetTimer(StopDashHandle,TimerDelegate,StopDash);
-	//FInputActionBinding Dash;
-	
-    
-	
-}
+	if (Toggle_Dash == true)
+	{
+		dashTimer += deltaTime;
+		if(dashTimer > 2 )
+		{
+		
+			if(Dash_Pressed == true)
+			{
+				StopDash();
+				Dash_Pressed = false;
+				GEngine->AddOnScreenDebugMessage(-1, .05f, FColor::Red, FString::Printf(TEXT("is desh called:") ));
+			}
+			GEngine->AddOnScreenDebugMessage(-1, .05f, FColor::Red, FString::Printf(TEXT("if dash timer") ));
+			dashTimer = 0;
+		
+		}
+	}
 
-void UpdateDash()
-{
-    
-  
-
-
-	
+   
+	GEngine->AddOnScreenDebugMessage(-1, .05f, FColor::Red, FString::Printf(TEXT("Dash Time: %f"),dashTimer ));
 }
 
 
@@ -136,9 +166,9 @@ void AmyPlayer::SetupPlayerInputComponent(class UInputComponent* PlayerInputComp
 	check(PlayerInputComponent);
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
-	//PlayerInputComponent->BindAction("Dash", IE_Released, this, &ACharacter::Dash);
-	
-
+	//InputComponent->BindAction("Dash", IE_Released, this, &AmyPlayer::Dash);
+	PlayerInputComponent->BindAction("Dash",IE_Released,this,&AmyPlayer::StopDash);
+	PlayerInputComponent->BindAction("Dash",IE_Pressed,this,&AmyPlayer::Dash);
 	
 	PlayerInputComponent->BindAxis("Move Forward / Backward", this, &AmyPlayer::MoveForward);
 	PlayerInputComponent->BindAxis("Move Right / Left", this, &AmyPlayer::MoveRight);

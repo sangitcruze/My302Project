@@ -31,6 +31,17 @@ public:
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Input)
 	float TurnRateGamepad;
+	virtual void Tick(float DeltaTime) override;
+	/**
+	 * Events
+	 */
+
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = "Health")
+	float Health;
+    
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = "Health")
+	float currentHealth;
+ 
 
 #pragma region Base functions
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
@@ -49,9 +60,9 @@ protected:
 
 	/** Called for side to side input */
 	void MoveRight(float Value);
-	void StopDash(float Value);
-	void Dash(float Value);
-
+	void StopDash();
+	void Dash();
+    void UpdateDash(float deltaTime);
 	/** 
 	 * Called via input to turn at a given rate. 
 	 * @param Rate	This is a normalized rate, i.e. 1.0 means 100% of desired turn rate
@@ -69,7 +80,14 @@ protected:
 
 	/** Handler for when a touch input stops. */
 	void TouchStopped(ETouchIndex::Type FingerIndex, FVector Location);
-
+    
+	bool Dash_Pressed = false;
+    bool CanCastDash = true;
+	
+	bool isHeld = false;
+	bool Toggle_Dash= false;
+	float dashTimer = 0;
+	
 
 protected:
 	// APawn interface
