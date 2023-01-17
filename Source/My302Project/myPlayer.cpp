@@ -140,9 +140,9 @@ void AmyPlayer::UpdateDash(float deltaTime)
 			{
 				StopDash();
 				Dash_Pressed = false;
-				GEngine->AddOnScreenDebugMessage(-1, .05f, FColor::Red, FString::Printf(TEXT("is desh called:") ));
+				//GEngine->AddOnScreenDebugMessage(-1, .05f, FColor::Red, FString::Printf(TEXT("is desh called:") ));
 			}
-			GEngine->AddOnScreenDebugMessage(-1, .05f, FColor::Red, FString::Printf(TEXT("if dash timer") ));
+			//GEngine->AddOnScreenDebugMessage(-1, .05f, FColor::Red, FString::Printf(TEXT("if dash timer") ));
 			dashTimer = 0;
 		
 		}
