@@ -6,6 +6,7 @@
 #include "Components/SphereComponent.h"
 #include "Components/SceneComponent.h"
 #include "Engine/EngineTypes.h"
+#include "PhysicsEngine/RadialForceComponent.h"
 #include "Kismet/GameplayStatics.h"
 
 // Sets default values
@@ -27,10 +28,10 @@ AMyEnemy2::AMyEnemy2()
 	SphereComponent =CreateDefaultSubobject<USphereComponent>(TEXT("SphereComponent"));
 	SphereComponent->SetCollisionProfileName("PhysicsActor");
 	SphereComponent->SetupAttachment(RootComponent);
-	SphereComponent->SetSimulatePhysics(true);
+	SphereComponent->SetSimulatePhysics(false);
 	SphereComponent->SetSphereRadius(100);
 	SphereComponent->OnComponentBeginOverlap.AddDynamic(this,&AMyEnemy2::OnOverlapBegin);
-	
+	RadialForceComponent = CreateDefaultSubobject<URadialForceComponent>(TEXT("Explosion"));
 
 }
 
@@ -82,32 +83,11 @@ void AMyEnemy2::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* Othe
                                int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	
-	// TArray<FHitResult> HitArray;
-	//
-	// const FVector Start = SphereMesh->GetComponentLocation();
-	// const FVector End = Start;
- //    
-	// const FCollisionShape SphereShape = FCollisionShape::MakeSphere(Radius);
-	//
-	// const bool bSweepHit = GetWorld()->SweepMultiByChannel(HitArray,Start,End,FQuat::Identity,ECC_WorldStatic, SphereShape);
-	// DrawDebugSphere(GetWorld(),Start,Radius,50,FColor::Orange, true);
- //
-	// if(bSweepHit)
-	// {
-	// 	for(const FHitResult HitResult : HitArray)
-	// 	{
-	// 		USphereComponent* SphereMesh2 = Cast<USphereComponent>((HitResult.GetActor())->GetRootComponent());
-	// 		if(SphereMesh2)
-	// 		{
-	// 			GEngine->AddOnScreenDebugMessage(6, 10.0f, FColor::Red, FString::Printf(TEXT("bSweepHit")));
-	// 			SphereMesh2->AddRadialImpulse(Start, Radius, Strength, RIF_Constant, true);
-	// 			
-	// 		}
-	// 	}
-	// }
+	
 	
 	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr))
 	{
+		//RadialForceComponent->FireImpulse();
 		FullHealth -= Damage;
 		//OtherComp->AddImpulseAtLocation(GetVelocity() * 111111111100.0f, GetActorLocation());
 		if( FullHealth <= 0)

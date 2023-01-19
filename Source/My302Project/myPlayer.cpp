@@ -56,12 +56,12 @@ AmyPlayer::AmyPlayer()
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 	SphereComponent =CreateDefaultSubobject<USphereComponent>(TEXT("SphereComponent"));
 	SphereComponent->SetupAttachment(RootComponent);
-	SphereComponent->SetSimulatePhysics(true);
+	SphereComponent->SetSimulatePhysics(false);
 
     SphereComponent->OnComponentBeginOverlap.AddDynamic(this,&AmyPlayer::OnOverlapBegin);
 	SphereComponent->SetSphereRadius(100);
     RadialForceComponent = CreateDefaultSubobject<URadialForceComponent>(TEXT("Explosion"));
-
+	RadialForceComponent->SetupAttachment(RootComponent);
 	
 	
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
@@ -164,10 +164,10 @@ void AmyPlayer::UpdateDash(float deltaTime)
 	GEngine->AddOnScreenDebugMessage(-1, .05f, FColor::Red, FString::Printf(TEXT("Dash Time: %f"),dashTimer ));
 }
 
-void AmyPlayer::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* MyEnemy2,
+void AmyPlayer::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if ((MyEnemy2 != nullptr) && (MyEnemy2 != this) && (OtherComp != nullptr))
+	if ((OtherActor != nullptr) &&(OtherActor!= this) && (OtherComp != nullptr))
 	{
 		GEngine->AddOnScreenDebugMessage(5, 2.10f, FColor::Red, FString::Printf(TEXT("Radical force")));
 		RadialForceComponent->FireImpulse();

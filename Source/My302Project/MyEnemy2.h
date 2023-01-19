@@ -7,6 +7,7 @@
 #include <Components/SkeletalMeshComponent.h>
 #include "Materials/Material.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "PhysicsEngine/RadialForceComponent.h"
 #include "MyEnemy2.generated.h"
 
 class USphereComponent;
@@ -44,7 +45,8 @@ public:
 	float Radius = 500.0f;
 	UPROPERTY(EditAnywhere, Category="Forces")
 	float Strength = 2000.0f;
-
+	UPROPERTY(EditAnywhere)
+	URadialForceComponent* RadialForceComponent;
 
 	
 	
