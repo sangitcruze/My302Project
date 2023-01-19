@@ -18,19 +18,21 @@ AMyEnemy2::AMyEnemy2()
 	FullHealth = 10000;
 	//currentHealth = FullHealth;
 	
-	skeletalMesh =CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SkeletalMesh"));
-	skeletalMesh->SetupAttachment(RootComponent);
-	skeletalMesh->SetCollisionProfileName("PhysicsActor");
-	skeletalMesh->SetSimulatePhysics(true);
-	skeletalMesh->SetGenerateOverlapEvents(true);
-	skeletalMesh->SetMobility(EComponentMobility::Movable);
+	// skeletalMesh =CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SkeletalMesh"));
+	// skeletalMesh->SetupAttachment(RootComponent);
+	// skeletalMesh->SetCollisionProfileName("PhysicsActor");
+	// skeletalMesh->SetSimulatePhysics(true);
+	// skeletalMesh->SetGenerateOverlapEvents(true);
+	// skeletalMesh->SetMobility(EComponentMobility::Movable);
 	
 	SphereComponent =CreateDefaultSubobject<USphereComponent>(TEXT("SphereComponent"));
-	SphereComponent->SetCollisionProfileName("PhysicsActor");
+	SphereComponent->SetCollisionProfileName("Trigger");
 	SphereComponent->SetupAttachment(RootComponent);
 	SphereComponent->SetSimulatePhysics(false);
 	SphereComponent->SetSphereRadius(100);
+	SphereComponent->SetWalkableSlopeOverride(FWalkableSlopeOverride(WalkableSlope_Unwalkable, 0.f));
 	SphereComponent->OnComponentBeginOverlap.AddDynamic(this,&AMyEnemy2::OnOverlapBegin);
+	SphereComponent->SetCollisionObjectType(ECollisionChannel::ECC_Pawn);
 	RadialForceComponent = CreateDefaultSubobject<URadialForceComponent>(TEXT("Explosion"));
 
 }

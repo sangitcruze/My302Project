@@ -2,6 +2,8 @@
 //Shangit cruze 
 
 #include "myPlayer.h"
+
+#include "MyEnemy2.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
@@ -54,15 +56,17 @@ AmyPlayer::AmyPlayer()
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
+	RadialForceComponent = CreateDefaultSubobject<URadialForceComponent>(TEXT("Explosion"));
+	RadialForceComponent->SetupAttachment(RootComponent);
+	RadialForceComponent->Radius = 100;
 	SphereComponent =CreateDefaultSubobject<USphereComponent>(TEXT("SphereComponent"));
-	SphereComponent->SetupAttachment(RootComponent);
+	SphereComponent->SetupAttachment(RadialForceComponent);
 	SphereComponent->SetSimulatePhysics(false);
 
     SphereComponent->OnComponentBeginOverlap.AddDynamic(this,&AmyPlayer::OnOverlapBegin);
 	SphereComponent->SetSphereRadius(100);
-    RadialForceComponent = CreateDefaultSubobject<URadialForceComponent>(TEXT("Explosion"));
-	RadialForceComponent->SetupAttachment(RootComponent);
-	
+	SphereComponent->SetCollisionObjectType(ECollisionChannel::ECC_Pawn);
+  
 	
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
@@ -171,6 +175,11 @@ void AmyPlayer::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* Othe
 	{
 		GEngine->AddOnScreenDebugMessage(5, 2.10f, FColor::Red, FString::Printf(TEXT("Radical force")));
 		RadialForceComponent->FireImpulse();
+		//OtherActor->SetActorLocation(FVector (50,60,9));
+		AMyEnemy2* Enemy2;
+		Enemy2 = dynamic_cast<AMyEnemy2*>(OtherActor);
+		if()
+		
 	}
 	
 }
