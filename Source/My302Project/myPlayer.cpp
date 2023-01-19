@@ -171,14 +171,23 @@ void AmyPlayer::UpdateDash(float deltaTime)
 void AmyPlayer::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if ((OtherActor != nullptr) &&(OtherActor!= this) && (OtherComp != nullptr))
+	if ((OtherActor != nullptr) /*&&(OtherActor!= this)*/ && (OtherComp != nullptr))
 	{
 		GEngine->AddOnScreenDebugMessage(5, 2.10f, FColor::Red, FString::Printf(TEXT("Radical force")));
 		RadialForceComponent->FireImpulse();
-		//OtherActor->SetActorLocation(FVector (50,60,9));
-		//AMyEnemy2* Enemy2;
-		//Enemy2 = dynamic_cast<AMyEnemy2*>(OtherActor);
-		//if()
+         
+		 AMyEnemy2* Enemy;
+		 
+		 Enemy = dynamic_cast<AMyEnemy2*>(OtherActor);
+		 if(Enemy!=nullptr)
+		 {
+		 	
+		 	FVector Direction = this->GetActorLocation() - Enemy->GetActorLocation();
+		 	Direction.Normalize();
+		 	float Scale = 10000000;
+           Enemy->GetCharacterMovement()->AddForce(-Direction* Scale + FVector(0,0,10000000));
+		 	GEngine->AddOnScreenDebugMessage(7, 2.10f, FColor::Red, FString::Printf(TEXT("new force pls work hehe")));
+		 }
 		
 	}
 	

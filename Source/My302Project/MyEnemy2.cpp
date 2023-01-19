@@ -15,7 +15,7 @@ AMyEnemy2::AMyEnemy2()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	FullHealth = 10000;
+	FullHealth = 100000000000000;
 	//currentHealth = FullHealth;
 	
 	// skeletalMesh =CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SkeletalMesh"));
