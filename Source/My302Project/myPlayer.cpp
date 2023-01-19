@@ -176,9 +176,9 @@ void AmyPlayer::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* Othe
 		GEngine->AddOnScreenDebugMessage(5, 2.10f, FColor::Red, FString::Printf(TEXT("Radical force")));
 		RadialForceComponent->FireImpulse();
 		//OtherActor->SetActorLocation(FVector (50,60,9));
-		AMyEnemy2* Enemy2;
-		Enemy2 = dynamic_cast<AMyEnemy2*>(OtherActor);
-		if()
+		//AMyEnemy2* Enemy2;
+		//Enemy2 = dynamic_cast<AMyEnemy2*>(OtherActor);
+		//if()
 		
 	}
 	
