@@ -7,8 +7,10 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include <Engine/Engine.h>
+#include "Components/SphereComponent.h"
 #include <Components/StaticMeshComponent.h>
 #include <components/PrimitiveComponent.h>
+#include "PhysicsEngine/RadialForceComponent.h"
 #include "myPlayer.generated.h"
 
 
@@ -35,7 +37,7 @@ public:
 	/**
 	 * Events
 	 */
-
+     
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = "Health")
 	float Health;
     
@@ -51,6 +53,17 @@ public:
 	/** Base look up/down rate, in deg/sec. Other scaling may affect final rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	float BaseLookUpRate;
+	UPROPERTY(EditAnywhere)
+	USphereComponent* SphereComponent;
+    UPROPERTY(EditAnywhere)
+	URadialForceComponent* RadialForceComponent;
+	UFUNCTION()
+	
+	void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+     
+	// declare overlap end function
+	
+
 #pragma endregion
 
 
@@ -101,3 +114,4 @@ protected:
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 	
 };
+

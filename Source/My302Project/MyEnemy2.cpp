@@ -2,8 +2,9 @@
 
 
 #include "MyEnemy2.h"
-#include "myPlayer.h"
+#include "DrawDebugHelpers.h"
 #include "Components/SphereComponent.h"
+#include "Components/SceneComponent.h"
 #include "Engine/EngineTypes.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -23,11 +24,12 @@ AMyEnemy2::AMyEnemy2()
 	skeletalMesh->SetGenerateOverlapEvents(true);
 	skeletalMesh->SetMobility(EComponentMobility::Movable);
 	
-	SphereMesh =CreateDefaultSubobject<USphereComponent>(TEXT("SphereMesh"));
-	SphereMesh->SetupAttachment(RootComponent);
-	SphereMesh->SetSimulatePhysics(true);
-
-	SphereMesh->OnComponentBeginOverlap.AddDynamic(this,&AMyEnemy2::OnOverlapBegin);
+	SphereComponent =CreateDefaultSubobject<USphereComponent>(TEXT("SphereComponent"));
+	SphereComponent->SetCollisionProfileName("PhysicsActor");
+	SphereComponent->SetupAttachment(RootComponent);
+	SphereComponent->SetSimulatePhysics(true);
+	SphereComponent->SetSphereRadius(100);
+	SphereComponent->OnComponentBeginOverlap.AddDynamic(this,&AMyEnemy2::OnOverlapBegin);
 	
 
 }
@@ -36,6 +38,7 @@ AMyEnemy2::AMyEnemy2()
 void AMyEnemy2::BeginPlay()
 {
 	Super::BeginPlay();
+	
 	
 }
 
@@ -72,31 +75,49 @@ void AMyEnemy2::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 }
 
-void AMyEnemy2::AddImpulse()
-{
-	TArray<FHitResult> HitArray;
-	const FVector Start = this->GetComponentLocation();
-	const FVector End = Start;
 
-	const FCollisionShape SphereShape = FCollisionShape::MakeSphere(Radius);
 
-	const bool bSweepHit = GetWorld()->SweepMultiByChannel(&HitArray,Start,End,Fquat::Identity,ECC_WorldStatic, SphereShape);
-    DrawDebugSphere(GetWorld(),Start,Radius,50,FColor::Orange, true);
-	
-}
 
 void AMyEnemy2::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
-	int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+                               int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-
-	FullHealth -= Damage;
-	OtherComp->AddImpulseAtLocation(GetVelocity() * 111111111100.0f, GetActorLocation());
-	if( FullHealth <= 0)
+	
+	// TArray<FHitResult> HitArray;
+	//
+	// const FVector Start = SphereMesh->GetComponentLocation();
+	// const FVector End = Start;
+ //    
+	// const FCollisionShape SphereShape = FCollisionShape::MakeSphere(Radius);
+	//
+	// const bool bSweepHit = GetWorld()->SweepMultiByChannel(HitArray,Start,End,FQuat::Identity,ECC_WorldStatic, SphereShape);
+	// DrawDebugSphere(GetWorld(),Start,Radius,50,FColor::Orange, true);
+ //
+	// if(bSweepHit)
+	// {
+	// 	for(const FHitResult HitResult : HitArray)
+	// 	{
+	// 		USphereComponent* SphereMesh2 = Cast<USphereComponent>((HitResult.GetActor())->GetRootComponent());
+	// 		if(SphereMesh2)
+	// 		{
+	// 			GEngine->AddOnScreenDebugMessage(6, 10.0f, FColor::Red, FString::Printf(TEXT("bSweepHit")));
+	// 			SphereMesh2->AddRadialImpulse(Start, Radius, Strength, RIF_Constant, true);
+	// 			
+	// 		}
+	// 	}
+	// }
+	
+	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr))
 	{
-		//UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), DeathEffect, GetActorLocation() -FVector(0,0,-20), FRotator::ZeroRotator, true);
-		Destroy();
-	}
+		FullHealth -= Damage;
+		//OtherComp->AddImpulseAtLocation(GetVelocity() * 111111111100.0f, GetActorLocation());
+		if( FullHealth <= 0)
+		{
+			//UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), DeathEffect, GetActorLocation() -FVector(0,0,-20), FRotator::ZeroRotator, true);
+			Destroy();
+		}
       
+	}
+	
 	GEngine->AddOnScreenDebugMessage(3, .10f, FColor::Red, FString::Printf(TEXT("HEALTH: %f"),FullHealth ));
 }
 

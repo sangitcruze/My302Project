@@ -10,7 +10,7 @@
 #include "MyEnemy2.generated.h"
 
 class USphereComponent;
-
+class UAddRadicalImpulse;
 
 UCLASS()
 class MY302PROJECT_API AMyEnemy2 : public ACharacter
@@ -20,12 +20,12 @@ class MY302PROJECT_API AMyEnemy2 : public ACharacter
 public:
 	// Sets default values for this character's properties
 	AMyEnemy2();
+	
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-	FVector GetComponentLocation();
-	void AddImpulse();
+
 
 public:	
 	// Called every frame
@@ -37,22 +37,27 @@ public:
 	UPROPERTY(EditAnywhere)
 	USkeletalMeshComponent* skeletalMesh;
 	UPROPERTY(EditAnywhere)
-	USphereComponent* SphereMesh;
+	USphereComponent* SphereComponent;
 	UPROPERTY(EditAnywhere)
 	AmyPlayer* AmyPlayer;
 	UPROPERTY(EditAnywhere,Category="Forces")
 	float Radius = 500.0f;
 	UPROPERTY(EditAnywhere, Category="Forces")
 	float Strength = 2000.0f;
+
+
 	
+	
+
+	//FVector GetComponentLocation();
     // declare overlap begin function
 	UFUNCTION()
 	void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-
+     
 	// declare overlap end function
 	UFUNCTION()
 	void OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
-   
+	
 	float FullHealth;
 	float currentHealth;
 	float PlayerSpeed = GetCharacterMovement()->MaxWalkSpeed;

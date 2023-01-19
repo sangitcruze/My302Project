@@ -6,9 +6,12 @@
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
 #include "Components/SplineComponent.h"
+#include "Components/SphereComponent.h"
+#include "Components/SceneComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "PhysicsEngine/RadialForceComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Particles/ParticleSystemComponent.h"
 
@@ -51,7 +54,16 @@ AmyPlayer::AmyPlayer()
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
+	SphereComponent =CreateDefaultSubobject<USphereComponent>(TEXT("SphereComponent"));
+	SphereComponent->SetupAttachment(RootComponent);
+	SphereComponent->SetSimulatePhysics(true);
 
+    SphereComponent->OnComponentBeginOverlap.AddDynamic(this,&AmyPlayer::OnOverlapBegin);
+	SphereComponent->SetSphereRadius(100);
+    RadialForceComponent = CreateDefaultSubobject<URadialForceComponent>(TEXT("Explosion"));
+
+	
+	
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
 }
@@ -152,7 +164,16 @@ void AmyPlayer::UpdateDash(float deltaTime)
 	GEngine->AddOnScreenDebugMessage(-1, .05f, FColor::Red, FString::Printf(TEXT("Dash Time: %f"),dashTimer ));
 }
 
-
+void AmyPlayer::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* MyEnemy2,
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if ((MyEnemy2 != nullptr) && (MyEnemy2 != this) && (OtherComp != nullptr))
+	{
+		GEngine->AddOnScreenDebugMessage(5, 2.10f, FColor::Red, FString::Printf(TEXT("Radical force")));
+		RadialForceComponent->FireImpulse();
+	}
+	
+}
 
 
 
