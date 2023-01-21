@@ -35,20 +35,22 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
     
-	UPROPERTY(EditAnywhere)
-	USkeletalMeshComponent* skeletalMesh;
+	
 	UPROPERTY(EditAnywhere)
 	USphereComponent* SphereComponent;
 	UPROPERTY(EditAnywhere)
-	AmyPlayer* AmyPlayer;
+	//AmyPlayer* AmyPlayer;
+	TSubclassOf<class AmyPlayer> myPlayer;
 	UPROPERTY(EditAnywhere,Category="Forces")
-	float Radius = 500.0f;
+	float Radius = 100.0f;
 	UPROPERTY(EditAnywhere, Category="Forces")
-	float Strength = 2000.0f;
+	float Strength = 20.0f;
 	UPROPERTY(EditAnywhere)
 	URadialForceComponent* RadialForceComponent;
-
-	
+    UPROPERTY(VisibleAnywhere)
+	class UWidgetComponent* HealthWidgetComponent;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stamina)
+	float Stamina;
 	
 
 	//FVector GetComponentLocation();
@@ -60,7 +62,7 @@ public:
 	UFUNCTION()
 	void OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 	
-	float FullHealth;
+	float Health;
 	float currentHealth;
 	float PlayerSpeed = GetCharacterMovement()->MaxWalkSpeed;
     float Damage = PlayerSpeed;

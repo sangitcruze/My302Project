@@ -49,18 +49,22 @@ public:
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	float BaseTurnRate;
-
+    
 	/** Base look up/down rate, in deg/sec. Other scaling may affect final rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	float BaseLookUpRate;
+	
 	UPROPERTY(EditAnywhere)
 	USphereComponent* SphereComponent;
+	
     UPROPERTY(EditAnywhere)
 	URadialForceComponent* RadialForceComponent;
-	UFUNCTION()
 	
+	UFUNCTION()
 	void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-     
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stamina)
+	float Stamina = 10;
 	// declare overlap end function
 	
 

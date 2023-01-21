@@ -4,6 +4,7 @@
 #include "myPlayer.h"
 
 #include "MyEnemy2.h"
+#include "MyEnemy.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
@@ -23,7 +24,7 @@ AmyPlayer::AmyPlayer()
 {
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
-
+    Stamina = 10;
 	// set our turn rate for input
 	TurnRateGamepad = 50.f;
 	BaseTurnRate = 45.f;
@@ -66,7 +67,7 @@ AmyPlayer::AmyPlayer()
     SphereComponent->OnComponentBeginOverlap.AddDynamic(this,&AmyPlayer::OnOverlapBegin);
 	SphereComponent->SetSphereRadius(100);
 	SphereComponent->SetCollisionObjectType(ECollisionChannel::ECC_Pawn);
-  
+    
 	
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
@@ -146,46 +147,49 @@ void AmyPlayer::StopDash()
 void AmyPlayer::UpdateDash(float deltaTime)
 {
 	
-	if (Toggle_Dash == true)
-	{
-		dashTimer += deltaTime;
-		if(dashTimer > 2 )
+		if (Toggle_Dash == true)
 		{
-		
-			if(Dash_Pressed == true)
-			{
-				StopDash();
-				Dash_Pressed = false;
-				//GEngine->AddOnScreenDebugMessage(-1, .05f, FColor::Red, FString::Printf(TEXT("is desh called:") ));
+			dashTimer += deltaTime;
+			
+				if(Dash_Pressed == true)
+				{
+					Stamina -= dashTimer;
+					if(Stamina<=0)
+					{
+					StopDash();
+					Dash_Pressed = false;
+					}
+					
+				dashTimer = 0;
+		   	
 			}
-			//GEngine->AddOnScreenDebugMessage(-1, .05f, FColor::Red, FString::Printf(TEXT("if dash timer") ));
-			dashTimer = 0;
-		
 		}
-	}
-
-   
-	GEngine->AddOnScreenDebugMessage(-1, .05f, FColor::Red, FString::Printf(TEXT("Dash Time: %f"),dashTimer ));
+	
+	//GEngine->AddOnScreenDebugMessage(-1, .50f, FColor::Red, FString::Printf(TEXT("stamina: %f"),Stamina ));
 }
 
 void AmyPlayer::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if ((OtherActor != nullptr) /*&&(OtherActor!= this)*/ && (OtherComp != nullptr))
+	
+	if ((OtherActor != nullptr) &&(OtherActor!= this) && (OtherComp != nullptr))
 	{
+		
 		GEngine->AddOnScreenDebugMessage(5, 2.10f, FColor::Red, FString::Printf(TEXT("Radical force")));
-		RadialForceComponent->FireImpulse();
+	
          
-		 AMyEnemy2* Enemy;
-		 
-		 Enemy = dynamic_cast<AMyEnemy2*>(OtherActor);
+		 AMyEnemy2* Enemy = Cast<AMyEnemy2>(OtherActor);
+	 //Enemy = Cast<AMyEnemy2*>(OtherActor);
 		 if(Enemy!=nullptr)
 		 {
-		 	
-		 	FVector Direction = this->GetActorLocation() - Enemy->GetActorLocation();
-		 	Direction.Normalize();
-		 	float Scale = 10000000;
-           Enemy->GetCharacterMovement()->AddForce(-Direction* Scale + FVector(0,0,10000000));
+          
+     	 	//RadialForceComponent->FireImpulse();
+		 	 Enemy->GetMesh()->SetSimulatePhysics(true);
+		 	 FVector Direction = this->GetActorLocation() - Enemy->GetActorLocation();
+		 	 Direction.Normalize();
+		 	 float Scale = 9090900;
+            //Enemy->GetCharacterMovement()->AddRadialImpulse(Enemy->GetActorLocation(), 100, 100000,RIF_Constant, true);
+		 	Enemy->GetMesh()->AddForce(-Direction* Scale + FVector(0,0,9000000));
 		 	GEngine->AddOnScreenDebugMessage(7, 2.10f, FColor::Red, FString::Printf(TEXT("new force pls work hehe")));
 		 }
 		

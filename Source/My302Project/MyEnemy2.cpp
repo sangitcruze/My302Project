@@ -3,9 +3,12 @@
 
 #include "MyEnemy2.h"
 #include "DrawDebugHelpers.h"
+#include "Components/CapsuleComponent.h"
 #include "Components/SphereComponent.h"
 #include "Components/SceneComponent.h"
+#include "Components/WidgetComponent.h"
 #include "Engine/EngineTypes.h"
+#include "Particles/ParticleSystemComponent.h"
 #include "PhysicsEngine/RadialForceComponent.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -15,7 +18,7 @@ AMyEnemy2::AMyEnemy2()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	FullHealth = 100000000000000;
+	Health = 1000000000;
 	//currentHealth = FullHealth;
 	
 	// skeletalMesh =CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SkeletalMesh"));
@@ -34,7 +37,10 @@ AMyEnemy2::AMyEnemy2()
 	SphereComponent->OnComponentBeginOverlap.AddDynamic(this,&AMyEnemy2::OnOverlapBegin);
 	SphereComponent->SetCollisionObjectType(ECollisionChannel::ECC_Pawn);
 	RadialForceComponent = CreateDefaultSubobject<URadialForceComponent>(TEXT("Explosion"));
-
+   //HealthWidgetComponent->CreateDefaultSubobject<UWidgetComponent>(TEXT("HealthBar"));
+	//HealthWidgetComponent->SetupAttachment(RootComponent);
+	//HealthWidgetComponent->UObjectInitialized(CreateAbstractDefaultSubobject<>())
+	
 }
 
 // Called when the game starts or when spawned
@@ -89,18 +95,20 @@ void AMyEnemy2::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* Othe
 	
 	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr))
 	{
-		//RadialForceComponent->FireImpulse();
-		FullHealth -= Damage;
-		//OtherComp->AddImpulseAtLocation(GetVelocity() * 111111111100.0f, GetActorLocation());
-		if( FullHealth <= 0)
+		
+		
+		Health -= Damage;
+		
+	
+		if( Health <= 0)
 		{
-			//UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), DeathEffect, GetActorLocation() -FVector(0,0,-20), FRotator::ZeroRotator, true);
+			//UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), P_Stun_Stars_Base, GetActorLocation() -FVector(0,0,-20), FRotator::ZeroRotator, true);
 			Destroy();
 		}
       
 	}
 	
-	GEngine->AddOnScreenDebugMessage(3, .10f, FColor::Red, FString::Printf(TEXT("HEALTH: %f"),FullHealth ));
+	GEngine->AddOnScreenDebugMessage(3, .10f, FColor::Red, FString::Printf(TEXT("HEALTH: %f"),Health ));
 }
 
 void AMyEnemy2::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
