@@ -50,7 +50,7 @@ public:
     UPROPERTY(VisibleAnywhere)
 	class UWidgetComponent* HealthWidgetComponent;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stamina)
-	float Stamina;
+	float Health;
 	
 
 	//FVector GetComponentLocation();
@@ -62,7 +62,7 @@ public:
 	UFUNCTION()
 	void OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 	
-	float Health;
+	//float Health;
 	float currentHealth;
 	float PlayerSpeed = GetCharacterMovement()->MaxWalkSpeed;
     float Damage = PlayerSpeed;
