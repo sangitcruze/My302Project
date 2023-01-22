@@ -18,7 +18,7 @@ AMyEnemy2::AMyEnemy2()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	Health = 1000000000;
+	Health = 10000;
 	//currentHealth = FullHealth;
 	
 	// skeletalMesh =CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SkeletalMesh"));
@@ -108,7 +108,7 @@ void AMyEnemy2::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* Othe
       
 	}
 	
-	GEngine->AddOnScreenDebugMessage(3, .10f, FColor::Red, FString::Printf(TEXT("HEALTH: %f"),Health ));
+	//GEngine->AddOnScreenDebugMessage(3, .10f, FColor::Red, FString::Printf(TEXT("HEALTH: %f"),Health ));
 }
 
 void AMyEnemy2::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,

@@ -165,7 +165,7 @@ void AmyPlayer::UpdateDash(float deltaTime)
 			}
 		}
 	
-	//GEngine->AddOnScreenDebugMessage(-1, .50f, FColor::Red, FString::Printf(TEXT("stamina: %f"),Stamina ));
+	
 }
 
 void AmyPlayer::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
@@ -174,23 +174,31 @@ void AmyPlayer::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* Othe
 	
 	if ((OtherActor != nullptr) &&(OtherActor!= this) && (OtherComp != nullptr))
 	{
+		if(OtherActor->Tags.Contains("Coin"))
+		{
+			Stamina += 2;
+			
+			GEngine->AddOnScreenDebugMessage(8, 2.10f, FColor::Red, FString::Printf(TEXT("picked up coin ")));
+			OtherActor->Destroy();
+			return;
+		}
 		
-		GEngine->AddOnScreenDebugMessage(5, 2.10f, FColor::Red, FString::Printf(TEXT("Radical force")));
-	
+		
+	    
          
 		 AMyEnemy2* Enemy = Cast<AMyEnemy2>(OtherActor);
-	 //Enemy = Cast<AMyEnemy2*>(OtherActor);
+	
 		 if(Enemy!=nullptr)
 		 {
-          
-     	 	//RadialForceComponent->FireImpulse();
+		 	
+     	 	
 		 	 Enemy->GetMesh()->SetSimulatePhysics(true);
 		 	 FVector Direction = this->GetActorLocation() - Enemy->GetActorLocation();
 		 	 Direction.Normalize();
 		 	 float Scale = 9090900;
-            //Enemy->GetCharacterMovement()->AddRadialImpulse(Enemy->GetActorLocation(), 100, 100000,RIF_Constant, true);
+            
 		 	Enemy->GetMesh()->AddForce(-Direction* Scale + FVector(0,0,9000000));
-		 	GEngine->AddOnScreenDebugMessage(7, 2.10f, FColor::Red, FString::Printf(TEXT("new force pls work hehe")));
+		 
 		 }
 		
 	}

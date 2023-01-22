@@ -55,6 +55,9 @@ public:
 	float BaseLookUpRate;
 	
 	UPROPERTY(EditAnywhere)
+	class UParticleSystemComponent* Stun;
+	
+	UPROPERTY(EditAnywhere)
 	USphereComponent* SphereComponent;
 	
     UPROPERTY(EditAnywhere)
