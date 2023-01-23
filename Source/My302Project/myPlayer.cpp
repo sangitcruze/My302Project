@@ -69,8 +69,7 @@ AmyPlayer::AmyPlayer()
 	SphereComponent->SetCollisionObjectType(ECollisionChannel::ECC_Pawn);
     
 	
-	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
-	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
+	
 }
 
 void AmyPlayer::Tick(float DeltaTime)
@@ -116,7 +115,7 @@ void AmyPlayer::MoveRight(float Value)
 
 
 
-
+// dash ability
 void AmyPlayer::Dash()
 {
 	Toggle_Dash = true;
@@ -132,7 +131,7 @@ void AmyPlayer::Dash()
 
 
 
-
+//stops the dash ability
 void AmyPlayer::StopDash()
 {
 	Toggle_Dash = false;
@@ -143,7 +142,7 @@ void AmyPlayer::StopDash()
 	GetCharacterMovement()->Velocity.Y = 2400.f;
 	
 }
-
+//updates the dash every tick
 void AmyPlayer::UpdateDash(float deltaTime)
 {
 	
@@ -171,7 +170,7 @@ void AmyPlayer::UpdateDash(float deltaTime)
 void AmyPlayer::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	
+	//adds stamina if collides with actors tagged "coin"
 	if ((OtherActor != nullptr) &&(OtherActor!= this) && (OtherComp != nullptr))
 	{
 		if(OtherActor->Tags.Contains("Coin"))
@@ -185,7 +184,7 @@ void AmyPlayer::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* Othe
 		
 		
 	    
-         
+         //adds force to the actor if collision takes place 
 		 AMyEnemy2* Enemy = Cast<AMyEnemy2>(OtherActor);
 	
 		 if(Enemy!=nullptr)
@@ -196,7 +195,7 @@ void AmyPlayer::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* Othe
 		 	 FVector Direction = this->GetActorLocation() - Enemy->GetActorLocation();
 		 	 Direction.Normalize();
 		 	 float Scale = 9090900;
-            
+		 	
 		 	Enemy->GetMesh()->AddForce(-Direction* Scale + FVector(0,0,9000000));
 		 
 		 }
